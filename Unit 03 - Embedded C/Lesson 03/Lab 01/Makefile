@@ -1,15 +1,34 @@
-# learn-in-depth:<Mohamed Sherif>
+# learn-in-depth:<Mohamed Sherif> 
 
-learn-in-depth.bin: app.c uart.c startup.s
-	arm-none-eabi-gcc.exe -mcpu=arm926ej-s -g -c -I . app.c -o app.o
-	arm-none-eabi-gcc.exe -mcpu=arm926ej-s -g -c -I . uart.c -o uart.o
-	arm-none-eabi-as.exe -mcpu=arm926ej-s -g startup.s -o startup.o
-	arm-none-eabi-ld.exe -T linker_script.ld startup.o app.o uart.o -o learn-indepth.elf -Map=map_file.map
-	arm-none-eabi-objcopy.exe -O binary learn-indepth.elf learn-indepth.bin
-	@echo "=======Build done======="
+CC=arm-none-eabi-
+CFLAGS=-mcpu=arm926ej-s -g -c
+INCS=-I .
+LIBS=
+SRC=$(wildcard *.c)
+OBJ=$(SRC:.c=.o)
+As=$(wildcard *.s)
+AsOBJ=$(As:.s=.o)
+ProjectName=learn-in-depth
+
+all: $(ProjectName).bin
+	@echo "=====Build done====="
+
+%.o: %.s
+	$(CC)as.exe $(CFLAGS) $< -o $@
+	
+%.o: %.c
+	$(CC)gcc.exe $(CFLAGS) $(INCS) $< -o $@
+
+$(ProjectName).elf: $(OBJ) $(AsOBJ)
+	$(CC)ld.exe -T linker_script.ld $(LIBS) $(OBJ) $(AsOBJ) -o $@ -Map=map_file.map
+
+$(ProjectName).bin: $(ProjectName).elf
+	$(CC)objcopy.exe -O binary $< $@
 
 clean:
 	rm -f *.elf *.bin
+	@echo "======Clean====="
 
 clean_all:
 	rm -f *.o *.elf *.bin *.map
+	@echo "=====Everything is clean====="
