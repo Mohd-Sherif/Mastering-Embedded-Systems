@@ -1,7 +1,7 @@
 # learn-in-depth:<Mohamed Sherif> 
 
 CC=arm-none-eabi-
-CFLAGS=-mcpu=cortex-m3 -mthumb -gdwarf-2
+CFLAGS=-mcpu=cortex-m3 -gdwarf-2 -c
 INCS=-I .
 LIBS=
 SRC=$(wildcard *.c)
