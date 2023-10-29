@@ -31,6 +31,19 @@
 /******** Base addresses for BUS Peripherals ***********/
 /*******************************************************/
 
+/***** Base Addresses for SYSTEM BUS Peripherals *******/
+
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+/* Peripheral: NVIC                                    */
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+#define NVIC_BASE_ADDRESS							0xE000E100UL
+#define NVIC_ISER0									(*(volatile uint32_t*)(NVIC_BASE_ADDRESS + 0x00))
+#define NVIC_ISER1									(*(volatile uint32_t*)(NVIC_BASE_ADDRESS + 0x04))
+#define NVIC_ISER2									(*(volatile uint32_t*)(NVIC_BASE_ADDRESS + 0x08))
+#define NVIC_ICER0									(*(volatile uint32_t*)(NVIC_BASE_ADDRESS + 0x80))
+#define NVIC_ICER1									(*(volatile uint32_t*)(NVIC_BASE_ADDRESS + 0x84))
+#define NVIC_ICER2									(*(volatile uint32_t*)(NVIC_BASE_ADDRESS + 0x88))
+
 /******** Base addresses for AHB Peripherals ***********/
 
 /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
@@ -104,13 +117,22 @@ typedef struct{
 /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 typedef struct{
 	volatile uint32_t EVCR;
-	volatile uint32_t EXTICR1;
-	volatile uint32_t EXTICR2;
-	volatile uint32_t EXTICR3;
-	volatile uint32_t EXTICR4;
+	volatile uint32_t EXTICR[4];
 	volatile uint32_t RESERVED;
 	volatile uint32_t MAPR2;
 } AFIO_TypeDef;
+
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+/* Peripheral register: EXTI                           */
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+typedef struct{
+	volatile uint32_t IMR;
+	volatile uint32_t EMR;
+	volatile uint32_t RTSR;
+	volatile uint32_t FTSR;
+	volatile uint32_t SWIER;
+	volatile uint32_t PR;
+} EXTI_TypeDef;
 
 /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 /* Peripheral Instants:                                */
@@ -139,6 +161,54 @@ typedef struct{
 #define RCC_GPIOC_CLK_EN()							(RCC->APB2ENR |= 1 << 4)
 #define RCC_GPIOD_CLK_EN()							(RCC->APB2ENR |= 1 << 5)
 #define RCC_GPIOE_CLK_EN()							(RCC->APB2ENR |= 1 << 6)
+
+/*******************************************************/
+
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+/* IVT Macros:                                         */
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+#define EXTI0_IRQ									6
+#define EXTI1_IRQ									7
+#define EXTI2_IRQ									8
+#define EXTI3_IRQ									9
+#define EXTI4_IRQ									10
+#define EXTI5_IRQ									23
+#define EXTI6_IRQ									23
+#define EXTI7_IRQ									23
+#define EXTI8_IRQ									23
+#define EXTI9_IRQ									23
+#define EXTI10_IRQ									40
+#define EXTI11_IRQ									40
+#define EXTI12_IRQ									40
+#define EXTI13_IRQ									40
+#define EXTI14_IRQ									40
+#define EXTI15_IRQ									40
+
+/*******************************************************/
+
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+/* NVIC IRQ Enable Macros:                             */
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+#define NVIC_IRQ6_EXTI0_ENABLE()					(NVIC_ISER0 |= 1<<6)
+#define NVIC_IRQ7_EXTI1_ENABLE()					(NVIC_ISER0 |= 1<<7)
+#define NVIC_IRQ8_EXTI2_ENABLE()					(NVIC_ISER0 |= 1<<8)
+#define NVIC_IRQ9_EXTI3_ENABLE()					(NVIC_ISER0 |= 1<<9)
+#define NVIC_IRQ10_EXTI4_ENABLE()					(NVIC_ISER0 |= 1<<10)
+#define NVIC_IRQ23_EXTI5_9_ENABLE()					(NVIC_ISER0 |= 1<<23)
+#define NVIC_IRQ40_EXTI10_15_ENABLE()				(NVIC_ISER1 |= 1<<8)  /* 40-32 = 8 */
+
+/*******************************************************/
+
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+/* NVIC IRQ Disable Macros:                            */
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+#define NVIC_IRQ6_EXTI0_DISABLE()					(NVIC_ICER0 |= 1<<6)
+#define NVIC_IRQ7_EXTI1_DISABLE()					(NVIC_ICER0 |= 1<<7)
+#define NVIC_IRQ8_EXTI2_DISABLE()					(NVIC_ICER0 |= 1<<8)
+#define NVIC_IRQ9_EXTI3_DISABLE()					(NVIC_ICER0 |= 1<<9)
+#define NVIC_IRQ10_EXTI4_DISABLE()					(NVIC_ICER0 |= 1<<10)
+#define NVIC_IRQ23_EXTI5_9_DISABLE()				(NVIC_ICER0 |= 1<<23)
+#define NVIC_IRQ40_EXTI10_15_DISABLE()				(NVIC_ICER1 |= 1<<8)  /* 40-32 = 8 */
 
 /*******************************************************/
 

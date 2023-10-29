@@ -19,6 +19,7 @@ OBJCOPY_BIN :=
 
 # Every subdirectory with source files must be described here
 SUBDIRS := \
+STM32F103C6_Drivers/EXTI \
 STM32F103C6_Drivers/GPIO \
 Src \
 Startup \
