@@ -39,8 +39,7 @@ void (*GP_IRQ_CallBack[16])(void);
  * @Return Value	- NONE
  * Note				- NONE
  */
-static void Enable_NVIC(uint16_t IRQ)
-{
+static void Enable_NVIC(uint16_t IRQ){
 	switch(IRQ){
 		case 0:
 			NVIC_IRQ6_EXTI0_ENABLE();
@@ -82,8 +81,7 @@ static void Enable_NVIC(uint16_t IRQ)
  * @Return Value	- NONE
  * Note				- NONE
  */
-void Disable_NVIC(uint16_t IRQ)
-{
+static void Disable_NVIC(uint16_t IRQ){
 	switch(IRQ){
 		case 0:
 			NVIC_IRQ6_EXTI0_DISABLE();
@@ -251,3 +249,68 @@ void MCAL_EXTI_GPIO_DeInit(void){
 void MCAL_EXTI_GPIO_Update(EXTI_PinConfig_t *PinConfig){
 	Update_EXTI(PinConfig);
 }
+
+/*******************************************************/
+
+/*******************************************************/
+/****************** ISR Functions **********************/
+/*******************************************************/
+void EXTI0_IRQHandler(void){
+	/* Clear IRQ bit in Pending Register (EXTI_PR) */
+	EXTI->PR |= (1 << 0);
+
+	/* Call the IRQ callback Function */
+	GP_IRQ_CallBack[0]();
+}
+
+void EXTI1_IRQHandler(void){
+	/* Clear IRQ bit in Pending Register (EXTI_PR) */
+	EXTI->PR |= (1 << 1);
+
+	/* Call the IRQ callback Function */
+	GP_IRQ_CallBack[1]();
+
+}
+
+void EXTI2_IRQHandler(void){
+	/* Clear IRQ bit in Pending Register (EXTI_PR) */
+	EXTI->PR |= (1 << 2);
+
+	/* Call the IRQ callback Function */
+	GP_IRQ_CallBack[2]();
+}
+
+void EXTI3_IRQHandler(void){
+	/* Clear IRQ bit in Pending Register (EXTI_PR) */
+	EXTI->PR |= (1 << 3);
+
+	/* Call the IRQ callback Function */
+	GP_IRQ_CallBack[3]();
+}
+
+void EXTI4_IRQHandler(void){
+	/* Clear IRQ bit in Pending Register (EXTI_PR) */
+	EXTI->PR |= (1 << 4);
+
+	/* Call the IRQ callback Function */
+	GP_IRQ_CallBack[4]();
+}
+
+void EXTI9_5_IRQHandler(void){
+	if(EXTI->PR & (1 << 5)) { EXTI->PR |= (1 << 5); GP_IRQ_CallBack[5](); }
+	if(EXTI->PR & (1 << 6)) { EXTI->PR |= (1 << 6); GP_IRQ_CallBack[6](); }
+	if(EXTI->PR & (1 << 7)) { EXTI->PR |= (1 << 7); GP_IRQ_CallBack[7](); }
+	if(EXTI->PR & (1 << 8)) { EXTI->PR |= (1 << 8); GP_IRQ_CallBack[8](); }
+	if(EXTI->PR & (1 << 9)) { EXTI->PR |= (1 << 9); GP_IRQ_CallBack[9](); }
+}
+
+void EXTI15_10_IRQHandler(void){
+	if(EXTI->PR & (1 << 10)) { EXTI->PR |= (1 << 10); GP_IRQ_CallBack[10](); }
+	if(EXTI->PR & (1 << 11)) { EXTI->PR |= (1 << 11); GP_IRQ_CallBack[11](); }
+	if(EXTI->PR & (1 << 12)) { EXTI->PR |= (1 << 12); GP_IRQ_CallBack[12](); }
+	if(EXTI->PR & (1 << 13)) { EXTI->PR |= (1 << 13); GP_IRQ_CallBack[13](); }
+	if(EXTI->PR & (1 << 14)) { EXTI->PR |= (1 << 14); GP_IRQ_CallBack[14](); }
+	if(EXTI->PR & (1 << 15)) { EXTI->PR |= (1 << 15); GP_IRQ_CallBack[15](); }
+}
+
+/*******************************************************/
