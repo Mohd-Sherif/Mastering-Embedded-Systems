@@ -53,6 +53,11 @@
 //#define RCC_BASE_ADDRESS							(PERIPHERALS_BASE_ADDRESS + 0x21000)
 
 /******** Base addresses for APB1 Peripherals **********/
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+/* Peripheral: USART                                   */
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+#define USART2_BASE_ADDRESS							0x40004400UL
+#define USART3_BASE_ADDRESS							0x40004800UL
 
 /******** Base addresses for APB2 Peripherals **********/
 
@@ -80,6 +85,11 @@
 /* Peripheral: EXTI                                    */
 /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 #define EXTI_BASE_ADDRESS							0x40010400UL
+
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+/* Peripheral: USART                                   */
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+#define USART1_BASE_ADDRESS							0x40013800UL
 
 /*******************************************************/
 
@@ -135,6 +145,19 @@ typedef struct{
 } EXTI_TypeDef;
 
 /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+/* Peripheral register: USART                          */
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+typedef struct{
+	volatile uint32_t SR;
+	volatile uint32_t DR;
+	volatile uint32_t BRR;
+	volatile uint32_t CR1;
+	volatile uint32_t CR2;
+	volatile uint32_t CR3;
+	volatile uint32_t GTPR;
+} USART_TypeDef;
+
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 /* Peripheral Instants:                                */
 /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 #define RCC											((RCC_TypeDef *)RCC_BASE_ADDRESS)
@@ -149,6 +172,10 @@ typedef struct{
 
 #define EXTI										((EXTI_TypeDef *)EXTI_BASE_ADDRESS)
 
+#define USART1										((USART_TypeDef *)USART1_BASE_ADDRESS)
+#define USART2										((USART_TypeDef *)USART2_BASE_ADDRESS)
+#define USART3										((USART_TypeDef *)USART3_BASE_ADDRESS)
+
 /*******************************************************/
 
 /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
@@ -162,11 +189,23 @@ typedef struct{
 #define RCC_GPIOD_CLK_EN()							(RCC->APB2ENR |= 1 << 5)
 #define RCC_GPIOE_CLK_EN()							(RCC->APB2ENR |= 1 << 6)
 
+#define RCC_USART1_CLK_EN()							(RCC->APB2ENR |= 1 << 14)
+#define RCC_USART2_CLK_EN()							(RCC->APB1ENR |= 1 << 17)
+#define RCC_USART3_CLK_EN()							(RCC->APB1ENR |= 1 << 18)
+
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+/* clock disable Macros:                               */
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+#define RCC_USART1_CLK_RST()							(RCC->APB2RSTR |= 1 << 14)
+#define RCC_USART2_CLK_RST()							(RCC->APB1RSTR |= 1 << 17)
+#define RCC_USART3_CLK_RST()							(RCC->APB1RSTR |= 1 << 18)
+
 /*******************************************************/
 
 /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 /* IVT Macros:                                         */
 /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+/* EXTI */
 #define EXTI0_IRQ									6
 #define EXTI1_IRQ									7
 #define EXTI2_IRQ									8
@@ -184,31 +223,48 @@ typedef struct{
 #define EXTI14_IRQ									40
 #define EXTI15_IRQ									40
 
+/* USART */
+#define USART1_IRQ									37
+#define USART2_IRQ									38
+#define USART3_IRQ									39
+
 /*******************************************************/
 
 /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 /* NVIC IRQ Enable Macros:                             */
 /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
-#define NVIC_IRQ6_EXTI0_ENABLE()					(NVIC_ISER0 |= 1<<6)
-#define NVIC_IRQ7_EXTI1_ENABLE()					(NVIC_ISER0 |= 1<<7)
-#define NVIC_IRQ8_EXTI2_ENABLE()					(NVIC_ISER0 |= 1<<8)
-#define NVIC_IRQ9_EXTI3_ENABLE()					(NVIC_ISER0 |= 1<<9)
-#define NVIC_IRQ10_EXTI4_ENABLE()					(NVIC_ISER0 |= 1<<10)
-#define NVIC_IRQ23_EXTI5_9_ENABLE()					(NVIC_ISER0 |= 1<<23)
-#define NVIC_IRQ40_EXTI10_15_ENABLE()				(NVIC_ISER1 |= 1<<8)  /* 40-32 = 8 */
+/* EXTI */
+#define NVIC_IRQ6_EXTI0_ENABLE()					(NVIC_ISER0 |= 1 << 6)
+#define NVIC_IRQ7_EXTI1_ENABLE()					(NVIC_ISER0 |= 1 << 7)
+#define NVIC_IRQ8_EXTI2_ENABLE()					(NVIC_ISER0 |= 1 << 8)
+#define NVIC_IRQ9_EXTI3_ENABLE()					(NVIC_ISER0 |= 1 << 9)
+#define NVIC_IRQ10_EXTI4_ENABLE()					(NVIC_ISER0 |= 1 << 10)
+#define NVIC_IRQ23_EXTI5_9_ENABLE()					(NVIC_ISER0 |= 1 << 23)
+#define NVIC_IRQ40_EXTI10_15_ENABLE()				(NVIC_ISER1 |= 1 << 8)  /* 40 - 32 = 8 */
+
+/* USART */
+#define NVIC_IRQ37_USART1_ENABLE()					(NVIC_ISER1 |= 1 << 5) /* 37 - 32 = 5 */
+#define NVIC_IRQ38_USART2_ENABLE()					(NVIC_ISER1 |= 1 << 6) /* 38 - 32 = 6 */
+#define NVIC_IRQ39_USART3_ENABLE()					(NVIC_ISER1 |= 1 << 7) /* 39 - 32 = 7 */
 
 /*******************************************************/
 
 /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 /* NVIC IRQ Disable Macros:                            */
 /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
-#define NVIC_IRQ6_EXTI0_DISABLE()					(NVIC_ICER0 |= 1<<6)
-#define NVIC_IRQ7_EXTI1_DISABLE()					(NVIC_ICER0 |= 1<<7)
-#define NVIC_IRQ8_EXTI2_DISABLE()					(NVIC_ICER0 |= 1<<8)
-#define NVIC_IRQ9_EXTI3_DISABLE()					(NVIC_ICER0 |= 1<<9)
-#define NVIC_IRQ10_EXTI4_DISABLE()					(NVIC_ICER0 |= 1<<10)
-#define NVIC_IRQ23_EXTI5_9_DISABLE()				(NVIC_ICER0 |= 1<<23)
-#define NVIC_IRQ40_EXTI10_15_DISABLE()				(NVIC_ICER1 |= 1<<8)  /* 40-32 = 8 */
+/* EXTI */
+#define NVIC_IRQ6_EXTI0_DISABLE()					(NVIC_ICER0 |= 1 << 6)
+#define NVIC_IRQ7_EXTI1_DISABLE()					(NVIC_ICER0 |= 1 << 7)
+#define NVIC_IRQ8_EXTI2_DISABLE()					(NVIC_ICER0 |= 1 << 8)
+#define NVIC_IRQ9_EXTI3_DISABLE()					(NVIC_ICER0 |= 1 << 9)
+#define NVIC_IRQ10_EXTI4_DISABLE()					(NVIC_ICER0 |= 1 << 10)
+#define NVIC_IRQ23_EXTI5_9_DISABLE()				(NVIC_ICER0 |= 1 << 23)
+#define NVIC_IRQ40_EXTI10_15_DISABLE()				(NVIC_ICER1 |= 1 << 8)  /* 40 - 32 = 8 */
+
+/* USART */
+#define NVIC_IRQ37_USART1_DISABLE()					(NVIC_ICER1 |= 1 << 5) /* 37 - 32 = 5 */
+#define NVIC_IRQ38_USART2_DISABLE()					(NVIC_ICER1 |= 1 << 6) /* 38 - 32 = 6 */
+#define NVIC_IRQ39_USART3_DISABLE()					(NVIC_ICER1 |= 1 << 7) /* 39 - 32 = 7 */
 
 /*******************************************************/
 

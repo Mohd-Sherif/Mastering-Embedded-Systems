@@ -33,8 +33,7 @@ typedef struct{
 	 * Specifies the External interrupt GPIO mapping.
 	 * This parameter must be set based on @ref EXTI_define.
 	 */
-	EXTI_GPIO_Mapping_t pin	;	//specifies the External interrupt GPIO mapping
-	//this parameter must be set based on @ref EXTI_define
+	EXTI_GPIO_Mapping_t pin;
 
 	/**
 	 * @triggerCase
