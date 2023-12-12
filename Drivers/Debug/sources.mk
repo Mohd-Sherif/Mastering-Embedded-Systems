@@ -22,6 +22,7 @@ SUBDIRS := \
 STM32F103C6_Drivers/EXTI \
 STM32F103C6_Drivers/GPIO \
 STM32F103C6_Drivers/RCC \
+STM32F103C6_Drivers/SPI \
 STM32F103C6_Drivers/USART \
 Src \
 Startup \

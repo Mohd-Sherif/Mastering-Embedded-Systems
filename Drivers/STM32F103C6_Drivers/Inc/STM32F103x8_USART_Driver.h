@@ -76,7 +76,7 @@ typedef struct{
 	 * Set the C Function() which will be called once the IRQ Happen.
 	 */
 	void(* P_IRQ_CallBack)(void);
-}USART_Config_t;
+} USART_Config_t;
 
 /*******************************************************/
 

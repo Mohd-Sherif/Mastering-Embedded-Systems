@@ -59,6 +59,11 @@
 #define USART2_BASE_ADDRESS							0x40004400UL
 #define USART3_BASE_ADDRESS							0x40004800UL
 
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+/* Peripheral: SPI                                     */
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+#define SPI2_BASE_ADDRESS							0x40003800UL
+
 /******** Base addresses for APB2 Peripherals **********/
 
 /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
@@ -90,6 +95,11 @@
 /* Peripheral: USART                                   */
 /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 #define USART1_BASE_ADDRESS							0x40013800UL
+
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+/* Peripheral: SPI                                     */
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+#define SPI1_BASE_ADDRESS							0x40013000UL
 
 /*******************************************************/
 
@@ -158,6 +168,21 @@ typedef struct{
 } USART_TypeDef;
 
 /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+/* Peripheral: SPI                                     */
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+typedef struct{
+	volatile uint32_t CR1;
+	volatile uint32_t CR2;
+	volatile uint32_t SR;
+	volatile uint32_t DR;
+	volatile uint32_t CRCPR;
+	volatile uint32_t RXCRCR;
+	volatile uint32_t TXCRCR;
+	volatile uint32_t I2SCFGR;
+	volatile uint32_t I2SPR;
+} SPI_Typedef;
+
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 /* Peripheral Instants:                                */
 /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 #define RCC											((RCC_TypeDef *)RCC_BASE_ADDRESS)
@@ -176,6 +201,9 @@ typedef struct{
 #define USART2										((USART_TypeDef *)USART2_BASE_ADDRESS)
 #define USART3										((USART_TypeDef *)USART3_BASE_ADDRESS)
 
+#define SPI1										((SPI_Typedef *)SPI1_BASE_ADDRESS)
+#define SPI2										((SPI_Typedef *)SPI2_BASE_ADDRESS)
+
 /*******************************************************/
 
 /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
@@ -193,12 +221,18 @@ typedef struct{
 #define RCC_USART2_CLK_EN()							(RCC->APB1ENR |= 1 << 17)
 #define RCC_USART3_CLK_EN()							(RCC->APB1ENR |= 1 << 18)
 
+#define RCC_SPI1_CLK_EN()							(RCC->APB2ENR |= 1 << 12)
+#define RCC_SPI2_CLK_EN()							(RCC->APB1ENR |= 1 << 14)
+
 /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 /* clock disable Macros:                               */
 /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
-#define RCC_USART1_CLK_RST()							(RCC->APB2RSTR |= 1 << 14)
-#define RCC_USART2_CLK_RST()							(RCC->APB1RSTR |= 1 << 17)
-#define RCC_USART3_CLK_RST()							(RCC->APB1RSTR |= 1 << 18)
+#define RCC_USART1_CLK_RST()						(RCC->APB2RSTR |= 1 << 14)
+#define RCC_USART2_CLK_RST()						(RCC->APB1RSTR |= 1 << 17)
+#define RCC_USART3_CLK_RST()						(RCC->APB1RSTR |= 1 << 18)
+
+#define RCC_SPI1_CLK_RST()							(RCC->APB2RSTR |= 1 << 12)
+#define RCC_SPI2_CLK_RST()							(RCC->APB1RSTR |= 1 << 14)
 
 /*******************************************************/
 
@@ -228,6 +262,10 @@ typedef struct{
 #define USART2_IRQ									38
 #define USART3_IRQ									39
 
+/* SPI */
+#define SPI1_IRQ									35
+#define SPI2_IRQ									36
+
 /*******************************************************/
 
 /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
@@ -247,6 +285,10 @@ typedef struct{
 #define NVIC_IRQ38_USART2_ENABLE()					(NVIC_ISER1 |= 1 << 6) /* 38 - 32 = 6 */
 #define NVIC_IRQ39_USART3_ENABLE()					(NVIC_ISER1 |= 1 << 7) /* 39 - 32 = 7 */
 
+/* SPI */
+#define NVIC_IRQ35_SPI1_ENABLE()					(NVIC_ISER1 |= 1 << (SPI1_IRQ - 32))  /* 35 - 32 */
+#define NVIC_IRQ36_SPI2_ENABLE()					(NVIC_ISER1 |= 1 << (SPI2_IRQ - 32))  /* 36 - 32 */
+
 /*******************************************************/
 
 /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
@@ -265,6 +307,10 @@ typedef struct{
 #define NVIC_IRQ37_USART1_DISABLE()					(NVIC_ICER1 |= 1 << 5) /* 37 - 32 = 5 */
 #define NVIC_IRQ38_USART2_DISABLE()					(NVIC_ICER1 |= 1 << 6) /* 38 - 32 = 6 */
 #define NVIC_IRQ39_USART3_DISABLE()					(NVIC_ICER1 |= 1 << 7) /* 39 - 32 = 7 */
+
+/* SPI */
+#define NVIC_IRQ35_SPI1_DISABLE()					(NVIC_ICER1 |= 1 << (SPI1_IRQ - 32))  /* 35 - 32 */
+#define NVIC_IRQ36_SPI2_DISABLE()					(NVIC_ICER1 |= 1 << (SPI2_IRQ - 32))  /* 36 - 32 */
 
 /*******************************************************/
 
