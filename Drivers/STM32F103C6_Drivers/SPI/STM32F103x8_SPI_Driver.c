@@ -20,6 +20,8 @@
  * index [1] --> SPI2 --> SPI2_Index
  */
 static SPI_Config_t *Global_SPI_Config[2] = {NULL, NULL};
+static SPI_Config_t Global_SPI1_Config;
+static SPI_Config_t Global_SPI2_Config;
 
 /*******************************************************/
 
@@ -51,11 +53,13 @@ void MCAL_SPI_Init(SPI_Typedef *SPIx, SPI_Config_t* SPI_config){
 	uint16_t tmp_CR2 = 0;
 
 	if(SPIx == SPI1){
-		Global_SPI_Config[SPI1_Index] = SPI_config;
+		Global_SPI1_Config = *SPI_config;
+		Global_SPI_Config[SPI1_Index] = &Global_SPI1_Config;
 		RCC_SPI1_CLK_EN();
 	}
 	else if (SPIx == SPI2){
-		Global_SPI_Config[SPI2_Index] = SPI_config;
+		Global_SPI2_Config = *SPI_config;
+		Global_SPI_Config[SPI2_Index] = &Global_SPI2_Config;
 		RCC_SPI2_CLK_EN();
 	}
 
