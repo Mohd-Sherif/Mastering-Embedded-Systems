@@ -160,7 +160,7 @@ enum Polling_Mech{
 /*******************************************************/
 
 /*******************************************************/
-/******* APIs Supported by "MCAL USART DRIVER" *********/
+/******* APIs Supported by "MCAL SPI DRIVER" ***********/
 /*******************************************************/
 
 void MCAL_SPI_Init(SPI_Typedef *SPIx, SPI_Config_t* SPI_config);
